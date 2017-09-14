@@ -22436,7 +22436,7 @@ var App = function (_React$Component) {
       return _react2.default.createElement(
         "div",
         { className: "app" },
-        _react2.default.createElement(CalendarSquare, null)
+        "HEY THERE"
       );
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
