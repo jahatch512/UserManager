@@ -2,7 +2,7 @@
 
 [User Manager][pages]
 
-[pages]: https://jahatch512.github.io/RateParser/
+[pages]: https://jahatch512.github.io/UserManager/
 
 ## Design & Implementation
 
