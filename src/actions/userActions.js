@@ -1,15 +1,20 @@
-import dispatcher from './dispatcher';
+import Dispatcher from '../dispatcher/dispatcher';
+import UserConstants from '../constants/userConstants';
 
-export default class Actions {
-    addUser: (userInfo) => {
+class Actions {
+    addUser = (userInfo) => {
+      console.log("about to dispatch from actions");
+      Dispatcher.dispatch({actionType: UserConstants.ADD_USER, user: userInfo});
 
-    },
-
-    updateUser: (newInfo) => {
-
-    },
-
-    deleteUser: (userId) => {
-      
     }
-}
+
+    updateUser = (newInfo) => {
+      let x = 5;
+    }
+
+    deleteUser = (userId) => {
+
+    }
+};
+
+export default new Actions();
