@@ -22783,12 +22783,16 @@ var App = function (_React$Component) {
       _this.setState({ userInfo: updateProfile });
     };
 
+    _this.resetInputs = function () {
+      document.getElementById("form-type").innerHTML = "Create New User";
+      document.getElementById("update-info").style.display = "none";
+    };
+
     _this.addUser = function (event) {
       event.preventDefault();
       _this.state.updateIndex > -1 ? _userActions2.default.updateUser(_this.state.updateIndex, _this.state.userInfo) : _userActions2.default.addUser(_this.state.userInfo);
       _this.setState({ userInfo: { "firstName": "", "lastName": "", "address": "" }, updateIndex: -1 });
-      document.getElementById("form-type").innerHTML = "Create New User";
-      document.getElementById("update-info").style.display = "none";
+      _this.resetInputs();
     };
 
     _this.updateUser = function (index) {
@@ -22802,15 +22806,13 @@ var App = function (_React$Component) {
     _this.cancelUpdate = function (event) {
       event.preventDefault();
       _this.setState({ updateIndex: -1 });
-      document.getElementById("form-type").innerHTML = "Create New User";
-      document.getElementById("update-info").style.display = "none";
+      _this.resetInputs();
     };
 
     _this.deleteUser = function (event) {
       event.preventDefault();
       _userActions2.default.deleteUser(_this.state.updateIndex);
-      document.getElementById("form-type").innerHTML = "Create New User";
-      document.getElementById("update-info").style.display = "none";
+      _this.resetInputs();
     };
 
     _this.render = function () {
@@ -22916,8 +22918,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(24);
 
 var _react2 = _interopRequireDefault(_react);
@@ -22928,82 +22928,49 @@ var _userActions2 = _interopRequireDefault(_userActions);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var UserTile = function UserTile(_ref) {
+  var profileData = _ref.profileData,
+      userId = _ref.userId,
+      onClick = _ref.onClick;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var UserTile = function (_React$Component) {
-  _inherits(UserTile, _React$Component);
-
-  function UserTile(props) {
-    _classCallCheck(this, UserTile);
-
-    var _this = _possibleConstructorReturn(this, (UserTile.__proto__ || Object.getPrototypeOf(UserTile)).call(this, props));
-
-    _this.onChange = function (event) {
-      event.preventDefault();
-      var updateProfile = _this.state.updateInfo;
-      updateProfile[event.target.id] = event.target.value;
-      _this.setState({ updateInfo: updateProfile });
-    };
-
-    _this.render = function () {
-      var profile = _this.props.profileData;
-      return _react2.default.createElement(
+  return _react2.default.createElement(
+    'div',
+    { className: 'user-container', onClick: onClick },
+    _react2.default.createElement(
+      'div',
+      { id: 'user-tile' },
+      _react2.default.createElement(
         'div',
-        { className: 'user-container', onClick: _this.updateInfo },
-        _react2.default.createElement(
-          'div',
-          { id: 'user-tile' },
-          _react2.default.createElement(
-            'div',
-            { className: 'profile-data' },
-            'First: ',
-            profile.firstName
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'profile-data' },
-            'Last: ',
-            profile.lastName
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'profile-data' },
-            'Address: ',
-            profile.address
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'profile-data' },
-            'ID: ',
-            _this.props.userId
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'update-overlay' },
-          'UPDATE/DELETE'
-        )
-      );
-    };
-
-    _this.updateInfo = props.onClick;
-    _this.state = { updateInfo: { "firstName": "", "lastName": "", "address": "" } };
-    return _this;
-  }
-
-  _createClass(UserTile, [{
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(props) {
-      this.setState({ profile: props.profileData, id: this.props.userId });
-    }
-  }]);
-
-  return UserTile;
-}(_react2.default.Component);
+        { className: 'profile-data' },
+        'First: ',
+        profileData.firstName
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'profile-data' },
+        'Last: ',
+        profileData.lastName
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'profile-data' },
+        'Address: ',
+        profileData.address
+      ),
+      _react2.default.createElement(
+        'div',
+        { className: 'profile-data' },
+        'ID: ',
+        userId
+      )
+    ),
+    _react2.default.createElement(
+      'div',
+      { className: 'update-overlay' },
+      'UPDATE/DELETE'
+    )
+  );
+};
 
 exports.default = UserTile;
 

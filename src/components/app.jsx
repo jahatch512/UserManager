@@ -31,12 +31,16 @@ export default class App extends React.Component {
       this.setState({userInfo: updateProfile});
     }
 
+    resetInputs = () => {
+      document.getElementById("form-type").innerHTML = "Create New User";
+      document.getElementById("update-info").style.display = "none";
+    }
+
     addUser = (event) => {
       event.preventDefault();
       this.state.updateIndex > -1 ? UserActions.updateUser(this.state.updateIndex, this.state.userInfo) : UserActions.addUser(this.state.userInfo);
       this.setState({userInfo: {"firstName": "", "lastName": "", "address": ""}, updateIndex: -1});
-      document.getElementById("form-type").innerHTML = "Create New User";
-      document.getElementById("update-info").style.display = "none";
+      this.resetInputs();
     }
 
     updateUser = (index) => {
@@ -50,15 +54,13 @@ export default class App extends React.Component {
     cancelUpdate = (event) => {
       event.preventDefault();
       this.setState({updateIndex: -1});
-      document.getElementById("form-type").innerHTML = "Create New User";
-      document.getElementById("update-info").style.display = "none";
+      this.resetInputs();
     }
 
     deleteUser = (event) => {
       event.preventDefault();
       UserActions.deleteUser(this.state.updateIndex);
-      document.getElementById("form-type").innerHTML = "Create New User";
-      document.getElementById("update-info").style.display = "none";
+      this.resetInputs();
     }
 
     render = () => {
@@ -113,7 +115,7 @@ export default class App extends React.Component {
                        type="submit"
                        value="Submit"/>
               </form>
-              
+
           <div className="users-container">
             {userList}
           </div>
