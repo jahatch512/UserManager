@@ -6,9 +6,7 @@ export default class UserTile extends React.Component {
     constructor(props) {
       super(props);
       this.updateInfo = props.onClick;
-      this.state = {profile: props.profileData,
-                    userId: this.props.userId,
-                    updateInfo: {"firstName": "", "lastName": "", "address": ""}};
+      this.state = {updateInfo: {"firstName": "", "lastName": "", "address": ""}};
     }
 
     componentWillReceiveProps (props) {
@@ -22,20 +20,15 @@ export default class UserTile extends React.Component {
       this.setState({updateInfo: updateProfile});
     }
 
-    deleteUser = () => {
-      UserActions.deleteUser(this.state.id);
-    }
-
-
     render = () => {
-      let profile = this.state.profile;
+      let profile = this.props.profileData;
         return (
           <div className="user-container" onClick={this.updateInfo}>
             <div id="user-tile">
               <div className="profile-data">First: {profile.firstName}</div>
               <div className="profile-data">Last: {profile.lastName}</div>
               <div className="profile-data">Address: {profile.address}</div>
-              <div className="profile-data">ID: {this.state.userId}</div>
+              <div className="profile-data">ID: {this.props.userId}</div>
             </div>
             <div className="update-overlay">UPDATE/DELETE</div>
           </div>

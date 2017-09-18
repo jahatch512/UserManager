@@ -6,36 +6,57 @@
 
 ## Design & Implementation
 
-Below are some of the implementation details and code snippets from some of the more challenging, creative, and unique aspects of the application.
+Below are some of the implementation details and code snippets from some of the more challenging, creative, and unique aspects of the application. This ReadMe is designed specifically as an explanation to my thought process during this coding challenge. A readme created to explain the features of the site would look more like this:
+[OkCoFounder by J. Hatch][okcofounder]
+[okcofounder]: https://github.com/jahatch512/OkCoFounder
 
 ### React, Webpack, other tools
 
-I decided to use the front end framework that I am most comfortable with and truly excited about. Writing vanilla React can be tedious so I made use of auxiliary packages such as Webpack and Babel. I wrote code as JSX, a JavaScript/XML hybrid which is transpiled into JS by Babel. Webpack manages and flattens dependencies, creating a single minified file with all the code necessary to display the page.
+I decided to use the front end framework that I am most comfortable with and truly excited about. Writing vanilla React can be tedious so I made use of auxiliary packages such as Webpack and Babel. I wrote code as JSX, a JavaScript/XML hybrid which is transpiled into JS by Babel. Webpack manages and flattens dependencies, creating a single minified file with all the code necessary to display the page. I wanted to write code in ES6 but not all browser implementations are ready for the new standard. Thus, there are some Babel plugins I used to help with this. babel-preset-es2015 converts ES6 code into ES5, while babel-plugin-transform-class-properties allows me to export a class (or instance of a class) which contains arrow functions. An example of this would be my Actions class:
+
+```javascript
+class Actions {
+    updateUser = (userId, newInfo) => {
+      Dispatcher.dispatch({actionType: UserConstants.UPDATE_USER, data: {userId: userId, userInfo: newInfo}});
+    }
+
+    addUser = (userInfo) => {
+      Dispatcher.dispatch({actionType: UserConstants.ADD_USER, user: userInfo});
+
+    }
+    deleteUser = (userId) => {
+      Dispatcher.dispatch({actionType: UserConstants.DELETE_USER, userId: userId});
+    }
+};
+
+export default new Actions();
+```
 
 ### Component Design
 
-My favorite part about React is the modular nature of the components. I knew I would be repeating similar "tiles" to represent different rate periods, so I was able to use a .map function to loop through the rate periods and generate a CalendarSquare component for each:
+My favorite part about React is the modular nature of the components. I knew I would be repeating similar "tiles" to represent different user profiles, so I was able to use a .map function to loop through the stored users and generate a UserTile component for each inside my parent render function:
 
 ```javascript
 render = () => {
-    var data = JSON.parse(this.state.ratePeriods);
-    var squaresList = data.map(function(name, index){
-    return <CalendarSquare key={ index } rateInfo={ name }/>;
-    })
+  var that = this;
+  let userList = this.state.savedUsers.map(function(profile, index){
+      return <UserTile key={ index } profileData={ profile } userId={index} onClick={() => that.updateUser(index)}/>;
+  })
 
-    return (
-      <div className="app">
-        <div className="title-header">Rate Schedule</div>
-        <div className="calendar-outer">
-            <div className="calendar-box">
-                { squaresList }
-            </div>
-        </div>
+  return (
+    <div className="app">
+      <div className="title-header">User Page</div>
+          <div className="flex-container" id="form-type">Create New User</div>    
+      <div className="users-container">
+        {userList}
       </div>
-    );
+    </div>
+  );
 }
 ```
-You can also see in the above code that I made use of the props/state features that React provides in order to pass necessary data (rateInfo) from the parent component into the child.
+You can also see in the above code that I made use of the props/state features that React provides in order to pass necessary data (profileData) from the parent component into the child. In keeping with React best practices, only my parent component interacts with the store. Each UserTile is just a dumby component that does not need to interact with the store, but rather receives its display information from its parent component. I also passed the updateUser function as props for a very specific reason: whenever I call "updateUser", I want to generate a form in the parent component. However, I also need to know the index of the component that was clicked, and this information is not available to the parent upon render. Thus, I pass the function as props with the dynamically generated "index" supplied as an argument. By nesting this inside an arrow function, I do not need to bind "this" as arrow functions bind context at the time of declaration.
+
+Inside the UserTile component, I make
 
 ### Hard Coding of Input Data
 

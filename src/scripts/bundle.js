@@ -22949,12 +22949,8 @@ var UserTile = function (_React$Component) {
       _this.setState({ updateInfo: updateProfile });
     };
 
-    _this.deleteUser = function () {
-      _userActions2.default.deleteUser(_this.state.id);
-    };
-
     _this.render = function () {
-      var profile = _this.state.profile;
+      var profile = _this.props.profileData;
       return _react2.default.createElement(
         'div',
         { className: 'user-container', onClick: _this.updateInfo },
@@ -22983,7 +22979,7 @@ var UserTile = function (_React$Component) {
             'div',
             { className: 'profile-data' },
             'ID: ',
-            _this.state.userId
+            _this.props.userId
           )
         ),
         _react2.default.createElement(
@@ -22995,9 +22991,7 @@ var UserTile = function (_React$Component) {
     };
 
     _this.updateInfo = props.onClick;
-    _this.state = { profile: props.profileData,
-      userId: _this.props.userId,
-      updateInfo: { "firstName": "", "lastName": "", "address": "" } };
+    _this.state = { updateInfo: { "firstName": "", "lastName": "", "address": "" } };
     return _this;
   }
 

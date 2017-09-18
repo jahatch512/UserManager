@@ -109,13 +109,11 @@ export default class App extends React.Component {
                   <button onClick={this.cancelUpdate}>CANCEL</button>
                 </div>
 
-
                 <input id="submit-profile"
                        type="submit"
                        value="Submit"/>
-
-
               </form>
+              
           <div className="users-container">
             {userList}
           </div>
