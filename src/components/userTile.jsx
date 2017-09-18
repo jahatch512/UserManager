@@ -37,7 +37,7 @@ export default class UserTile extends React.Component {
               <div className="profile-data">Address: {profile.address}</div>
               <div className="profile-data">ID: {this.state.userId}</div>
             </div>
-
+            <div className="update-overlay">UPDATE/DELETE</div>
           </div>
         );
     }

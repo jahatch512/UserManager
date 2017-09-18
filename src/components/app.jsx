@@ -54,6 +54,13 @@ export default class App extends React.Component {
       document.getElementById("update-info").style.display = "none";
     }
 
+    deleteUser = (event) => {
+      event.preventDefault();
+      UserActions.deleteUser(this.state.updateIndex);
+      document.getElementById("form-type").innerHTML = "Create New User";
+      document.getElementById("update-info").style.display = "none";
+    }
+
     render = () => {
       var that = this;
       let userList = this.state.savedUsers.map(function(profile, index){
@@ -98,6 +105,7 @@ export default class App extends React.Component {
                   <div id="user-id">
 
                   </div>
+                  <button onClick={this.deleteUser}>DELETE</button>
                   <button onClick={this.cancelUpdate}>CANCEL</button>
                 </div>
 

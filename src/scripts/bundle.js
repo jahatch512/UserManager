@@ -22731,6 +22731,13 @@ var App = function (_React$Component) {
       document.getElementById("update-info").style.display = "none";
     };
 
+    _this.deleteUser = function (event) {
+      event.preventDefault();
+      _userActions2.default.deleteUser(_this.state.updateIndex);
+      document.getElementById("form-type").innerHTML = "Create New User";
+      document.getElementById("update-info").style.display = "none";
+    };
+
     _this.render = function () {
       var that = _this;
       var userList = _this.state.savedUsers.map(function (profile, index) {
@@ -22789,6 +22796,11 @@ var App = function (_React$Component) {
             'div',
             { className: 'flex-container', id: 'update-info' },
             _react2.default.createElement('div', { id: 'user-id' }),
+            _react2.default.createElement(
+              'button',
+              { onClick: _this.deleteUser },
+              'DELETE'
+            ),
             _react2.default.createElement(
               'button',
               { onClick: _this.cancelUpdate },
@@ -22898,6 +22910,11 @@ var UserTile = function (_React$Component) {
             'ID: ',
             _this.state.userId
           )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'update-overlay' },
+          'UPDATE/DELETE'
         )
       );
     };
@@ -22948,7 +22965,6 @@ var Actions = function Actions() {
   _classCallCheck(this, Actions);
 
   this.updateUser = function (userId, newInfo) {
-    console.log("sending dispatch");
     _dispatcher2.default.dispatch({ actionType: _userConstants2.default.UPDATE_USER, data: { userId: userId, userInfo: newInfo } });
   };
 
@@ -22957,7 +22973,6 @@ var Actions = function Actions() {
   };
 
   this.deleteUser = function (userId) {
-    console.log("called delete user");
     _dispatcher2.default.dispatch({ actionType: _userConstants2.default.DELETE_USER, userId: userId });
   };
 };

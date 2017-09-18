@@ -1,4 +1,9 @@
-.title-header {
+html {
+  height: 100vh;
+  background: lightslategray;
+}
+
+  .title-header {
   width: auto;
   text-align: center;
   margin-left: auto;
@@ -45,6 +50,7 @@
   width: 280px;
   background-color: rgba(	236, 240, 241, .5);
   border-radius: 4px;
+  outline: none;
 }
 
 .submit-profile:hover {
@@ -78,8 +84,34 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background-color: rgba(128, 121, 121, .2);
+  background-color: rgba(128, 121, 121, .7);
   position: relative;
+}
+
+.user-container:hover {
+  cursor: pointer;
+  transform: translateY(-5px) translateZ(100px);
+}
+
+.update-overlay {
+  min-width: 180px;
+  max-width: 180px;
+  height: 140px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  background-color: black;
+  opacity: 0;
+  color: white;
+  line-height: 5;
+  text-align: center;
+  font-size: 18px;
+}
+
+.update-overlay:hover {
+  opacity: 0.8;
+  z-index: 10;
 }
 
 #update-form {
@@ -88,6 +120,14 @@
 
 #cancel-update {
   display: none;
+}
+
+.profile-data {
+    margin: 3px 0px 3px 15px;
+    font-size: 16px;
+}
+.profile-data:first-child {
+    margin-top: 15px;
 }
 
 @media (max-width: 317px) {
