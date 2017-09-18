@@ -4,6 +4,8 @@
 
 [pages]: https://jahatch512.github.io/UserManager/
 
+This is a simple application used to manage an index of users. To add a user, simply type in the relevant information in the input fields and hit "Submit". To update or delete a user, click on their profile: when the profile is selected, you will see the corresponding User ID appear along with buttons for "cancel" and "delete". When the user is selected, you can input the new data and click "Submit" once again. 
+
 ## Design & Implementation
 
 Below are some of the implementation details and code snippets from some of the more challenging, creative, and unique aspects of the application. This ReadMe is designed specifically as an explanation to my thought process during this coding challenge. A readme created to explain the features of the site would look more like this:
