@@ -2,18 +2,19 @@ import Dispatcher from '../dispatcher/dispatcher';
 import UserConstants from '../constants/userConstants';
 
 class Actions {
+
+    updateUser = (userId, newInfo) => {
+      console.log("sending dispatch");
+      Dispatcher.dispatch({actionType: UserConstants.UPDATE_USER, data: {userId: userId, userInfo: newInfo}});
+    }
+
     addUser = (userInfo) => {
-      console.log("about to dispatch from actions");
       Dispatcher.dispatch({actionType: UserConstants.ADD_USER, user: userInfo});
 
     }
-
-    updateUser = (newInfo) => {
-      let x = 5;
-    }
-
     deleteUser = (userId) => {
-
+      console.log("called delete user");
+      Dispatcher.dispatch({actionType: UserConstants.DELETE_USER, userId: userId});
     }
 };
 

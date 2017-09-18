@@ -22693,13 +22693,15 @@ var App = function (_React$Component) {
       _this.userStoreListener = _userStore2.default.addListener(_this.onUserChange);
     };
 
-    _this.onUserChange = function () {
-      console.log("onUserChange");
+    _this.componentWillUnmount = function () {
+      _this.userStoreListener.remove();
+    };
 
+    _this.onUserChange = function () {
       _this.setState({ savedUsers: _userStore2.default.all() });
     };
 
-    _this.onChange = function (event) {
+    _this.updateInformation = function (event) {
       event.preventDefault();
       var updateProfile = _this.state.userInfo;
       updateProfile[event.target.id] = event.target.value;
@@ -22707,15 +22709,34 @@ var App = function (_React$Component) {
     };
 
     _this.addUser = function (event) {
-      console.log("called addUser");
-
       event.preventDefault();
-      _userActions2.default.addUser(_this.state.userInfo);
+      _this.state.updateIndex > -1 ? _userActions2.default.updateUser(_this.state.updateIndex, _this.state.userInfo) : _userActions2.default.addUser(_this.state.userInfo);
+      _this.setState({ userInfo: { "firstName": "", "lastName": "", "address": "" }, updateIndex: -1 });
+      document.getElementById("form-type").innerHTML = "Create New User";
+      document.getElementById("update-info").style.display = "none";
+    };
+
+    _this.updateUser = function (index) {
+      event.preventDefault();
+      _this.setState({ updateIndex: index });
+      document.getElementById("form-type").innerHTML = "Update Existing User with ID: " + index;
+      document.getElementById("update-info").style.display = "flex";
+      document.getElementById('user-id').innerHTML = "USER ID: " + index;
+    };
+
+    _this.cancelUpdate = function (event) {
+      event.preventDefault();
+      _this.setState({ updateIndex: -1 });
+      document.getElementById("form-type").innerHTML = "Create New User";
+      document.getElementById("update-info").style.display = "none";
     };
 
     _this.render = function () {
+      var that = _this;
       var userList = _this.state.savedUsers.map(function (profile, index) {
-        return _react2.default.createElement(_userTile2.default, { key: index, profileData: profile });
+        return _react2.default.createElement(_userTile2.default, { key: index, profileData: profile, userId: index, onClick: function onClick() {
+            return that.updateUser(index);
+          } });
       });
 
       return _react2.default.createElement(
@@ -22727,6 +22748,11 @@ var App = function (_React$Component) {
           'User Page'
         ),
         _react2.default.createElement(
+          'div',
+          { className: 'flex-container', id: 'form-type' },
+          'Create New User'
+        ),
+        _react2.default.createElement(
           'form',
           { onSubmit: _this.addUser },
           _react2.default.createElement(
@@ -22735,29 +22761,43 @@ var App = function (_React$Component) {
             _react2.default.createElement('input', { type: 'text',
               className: 'form-textbox',
               value: _this.state.userInfo["firstName"],
-              onChange: _this.onChange,
-              placeholder: ' Start Date: 10-10-2017',
+              onChange: _this.updateInformation,
+              placeholder: ' First Name: James',
               id: 'firstName' }),
             _react2.default.createElement('br', null),
             _react2.default.createElement('br', null),
             _react2.default.createElement('input', { type: 'text',
               className: 'form-textbox',
               value: _this.state.userInfo["lastName"],
-              onChange: _this.onChange,
-              placeholder: ' End Date: 12-12-2017',
+              onChange: _this.updateInformation,
+              placeholder: ' Last Name: Hatch',
               id: 'lastName' }),
             _react2.default.createElement('br', null),
-            _react2.default.createElement('br', null),
+            _react2.default.createElement('br', null)
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'flex-container' },
             _react2.default.createElement('input', { type: 'text',
-              className: 'form-textbox',
+              className: 'form-textbox address',
               value: _this.state.userInfo["address"],
-              onChange: _this.onChange,
-              placeholder: ' Rate: 123.45',
+              onChange: _this.updateInformation,
+              placeholder: ' Address: 1234 Example Lane, Arvada CO 80004',
               id: 'address' })
           ),
-          _react2.default.createElement('input', { className: 'submit-profile',
+          _react2.default.createElement(
+            'div',
+            { className: 'flex-container', id: 'update-info' },
+            _react2.default.createElement('div', { id: 'user-id' }),
+            _react2.default.createElement(
+              'button',
+              { onClick: _this.cancelUpdate },
+              'CANCEL'
+            )
+          ),
+          _react2.default.createElement('input', { id: 'submit-profile',
             type: 'submit',
-            value: 'Submit New User' })
+            value: 'Submit' })
         ),
         _react2.default.createElement(
           'div',
@@ -22767,7 +22807,8 @@ var App = function (_React$Component) {
       );
     };
 
-    _this.state = { savedUsers: _userStore2.default.all(),
+    _this.state = { updateIndex: -1,
+      savedUsers: _userStore2.default.all(),
       userInfo: { "firstName": "", "lastName": "", "address": "" } };
     return _this;
   }
@@ -22788,9 +22829,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = __webpack_require__(24);
 
 var _react2 = _interopRequireDefault(_react);
+
+var _userActions = __webpack_require__(189);
+
+var _userActions2 = _interopRequireDefault(_userActions);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22808,35 +22855,66 @@ var UserTile = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (UserTile.__proto__ || Object.getPrototypeOf(UserTile)).call(this, props));
 
+    _this.onChange = function (event) {
+      event.preventDefault();
+      var updateProfile = _this.state.updateInfo;
+      updateProfile[event.target.id] = event.target.value;
+      _this.setState({ updateInfo: updateProfile });
+    };
+
+    _this.deleteUser = function () {
+      _userActions2.default.deleteUser(_this.state.id);
+    };
+
     _this.render = function () {
       var profile = _this.state.profile;
       return _react2.default.createElement(
-        "div",
-        { className: "user-tile" },
+        'div',
+        { className: 'user-container', onClick: _this.updateInfo },
         _react2.default.createElement(
-          "div",
-          { className: "profile-data" },
-          "First: ",
-          profile.first
-        ),
-        _react2.default.createElement(
-          "div",
-          { className: "profile-data" },
-          "Last: ",
-          profile.last
-        ),
-        _react2.default.createElement(
-          "div",
-          { className: "profile-data" },
-          "Address: ",
-          profile.address
+          'div',
+          { id: 'user-tile' },
+          _react2.default.createElement(
+            'div',
+            { className: 'profile-data' },
+            'First: ',
+            profile.firstName
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'profile-data' },
+            'Last: ',
+            profile.lastName
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'profile-data' },
+            'Address: ',
+            profile.address
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'profile-data' },
+            'ID: ',
+            _this.state.userId
+          )
         )
       );
     };
 
-    _this.state = { profile: props.profileData };
+    _this.updateInfo = props.onClick;
+    _this.state = { profile: props.profileData,
+      userId: _this.props.userId,
+      updateInfo: { "firstName": "", "lastName": "", "address": "" } };
     return _this;
   }
+
+  _createClass(UserTile, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(props) {
+      this.setState({ profile: props.profileData, id: this.props.userId });
+    }
+  }]);
 
   return UserTile;
 }(_react2.default.Component);
@@ -22869,16 +22947,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Actions = function Actions() {
   _classCallCheck(this, Actions);
 
+  this.updateUser = function (userId, newInfo) {
+    console.log("sending dispatch");
+    _dispatcher2.default.dispatch({ actionType: _userConstants2.default.UPDATE_USER, data: { userId: userId, userInfo: newInfo } });
+  };
+
   this.addUser = function (userInfo) {
-    console.log("about to dispatch from actions");
     _dispatcher2.default.dispatch({ actionType: _userConstants2.default.ADD_USER, user: userInfo });
   };
 
-  this.updateUser = function (newInfo) {
-    var x = 5;
+  this.deleteUser = function (userId) {
+    console.log("called delete user");
+    _dispatcher2.default.dispatch({ actionType: _userConstants2.default.DELETE_USER, userId: userId });
   };
-
-  this.deleteUser = function (userId) {};
 };
 
 ;
@@ -22916,8 +22997,17 @@ UserStore.all = function () {
 };
 
 var addUser = function addUser(user) {
-  console.log("called addUser in store");
   _users.push(user);
+  UserStore.__emitChange();
+};
+
+var deleteUser = function deleteUser(userId) {
+  _users.splice(userId, 1);
+  UserStore.__emitChange();
+};
+
+var updateUser = function updateUser(data) {
+  _users[data.userId] = data.userInfo;
   UserStore.__emitChange();
 };
 
@@ -22927,10 +23017,10 @@ UserStore.__onDispatch = function (payload) {
       addUser(payload.user);
       break;
     case _userConstants2.default.UPDATE_USER:
-      // updateUser(payload.user);
+      updateUser(payload.data);
       break;
     case _userConstants2.default.DELETE_USER:
-      // deleteUser(payload.user);
+      deleteUser(payload.userId);
       break;
   }
 };

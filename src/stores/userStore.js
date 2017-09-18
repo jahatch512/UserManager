@@ -10,8 +10,17 @@ UserStore.all = function() {
 };
 
 let addUser = function (user) {
-  console.log("called addUser in store");
   _users.push(user);
+  UserStore.__emitChange();
+};
+
+let deleteUser = function (userId) {
+  _users.splice(userId, 1);
+  UserStore.__emitChange();
+};
+
+let updateUser = function (data) {
+  _users[data.userId] = data.userInfo;
   UserStore.__emitChange();
 };
 
@@ -21,10 +30,10 @@ UserStore.__onDispatch = function (payload) {
       addUser(payload.user);
       break;
     case UserConstants.UPDATE_USER:
-      // updateUser(payload.user);
+      updateUser(payload.data);
       break;
     case UserConstants.DELETE_USER:
-      // deleteUser(payload.user);
+      deleteUser(payload.userId);
       break;
   }
 
