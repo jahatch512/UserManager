@@ -87,7 +87,17 @@ The Flux architecture pattern was designed to create a singular, structured flow
 
 Both the Dispatcher and the Store must be singleton instances to ensure there are no data collisions between multiple instances. You can see that in both files I define the class and then export a singleton instance of it to be used by other parts of the application. Rather than define a new Store class, I can simply create a basic Flux store and add any necessary custom methods. In the store, the #all method is public and can be used by other React components while the other methods are not exposed and can only be used within userStore.js.
 
-I also made use of the lifecycle methods #componentDidMount and #componentWillUnmount to add/remove my store listener. These lifecycle methods are very useful because they give you a very strictly defined "order of operations" for how React will render the components. Depending on when you want a certain action to happen, you can pick a lifecycle method to nest it within and feel confident about where in the render chain the action will occur. There is no reason listen to the Store if the component is not "mounted" on the DOM so we can add/remove it accordingly. There are other methods, like #componentWillReceiveProps which can be used to make sure all components are updated properly when the state of any piece of the front end changes. 
+I also made use of the lifecycle methods #componentDidMount and #componentWillUnmount to add/remove my store listener. These lifecycle methods are very useful because they give you a very strictly defined "order of operations" for how React will render the components. Depending on when you want a certain action to happen, you can pick a lifecycle method to nest it within and feel confident about where in the render chain the action will occur. There is no reason listen to the Store if the component is not "mounted" on the DOM so we can add/remove it accordingly. There are other methods, like #componentWillReceiveProps which can be used to make sure all components are updated properly when the state of any piece of the front end changes.
+
+```javascript
+componentDidMount = () => {
+  this.userStoreListener = UserStore.addListener(this.onUserChange);
+}
+
+componentWillUnmount = () => {
+  this.userStoreListener.remove();
+}
+```
 
 ### Mobile Friendly Design
 
