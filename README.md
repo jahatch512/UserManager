@@ -4,7 +4,7 @@
 
 [pages]: https://jahatch512.github.io/UserManager/
 
-This is a simple application used to manage an index of users. To add a user, simply type in the relevant information in the input fields and hit "Submit". To update or delete a user, click on their profile: when the profile is selected, you will see the corresponding User ID appear along with buttons for "cancel" and "delete". When the user is selected, you can input the new data and click "Submit" once again. 
+This is a simple application used to manage an index of users. To add a user, simply type in the relevant information in the input fields and hit "Submit". To update or delete a user, click on their profile: when the profile is selected, you will see the corresponding User ID appear along with buttons for "cancel" and "delete". When the user is selected, you can input the new data and click "Submit" once again.
 
 ## Design & Implementation
 
@@ -86,6 +86,8 @@ export default UserTile;
 The Flux architecture pattern was designed to create a singular, structured flow of data through the application. In this way, it is easy to determine where along the loop an error might have occurred. As I was writing my application, I would often put a debugger at each step (Client Action, Dispatcher, Store, etc.) to determine where/how the data flow was being compromised. It is also standard practice to use constants rather than strings when passing actions through the dispatcher to improve error messaging readability.
 
 Both the Dispatcher and the Store must be singleton instances to ensure there are no data collisions between multiple instances. You can see that in both files I define the class and then export a singleton instance of it to be used by other parts of the application. Rather than define a new Store class, I can simply create a basic Flux store and add any necessary custom methods. In the store, the #all method is public and can be used by other React components while the other methods are not exposed and can only be used within userStore.js.
+
+I also made use of the lifecycle methods #componentDidMount and #componentWillUnmount to add/remove my store listener. These lifecycle methods are very useful because they give you a very strictly defined "order of operations" for how React will render the components. Depending on when you want a certain action to happen, you can pick a lifecycle method to nest it within and feel confident about where in the render chain the action will occur. There is no reason listen to the Store if the component is not "mounted" on the DOM so we can add/remove it accordingly. There are other methods, like #componentWillReceiveProps which can be used to make sure all components are updated properly when the state of any piece of the front end changes. 
 
 ### Mobile Friendly Design
 
